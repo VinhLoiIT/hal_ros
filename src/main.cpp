@@ -32,11 +32,13 @@ void set_led(const std_msgs::Bool::ConstPtr& msg)
 void lcd_print(const std_msgs::String::ConstPtr& msg){
     std::string str;
     str = msg->data;
-    std::replace(str.begin(), str.end(), ':', ' ');
+    string segment;
     vector<string> array;
     stringstream ss(str);
-    string temp;
-    while (ss >> temp)array.push_back(temp);
+    while(getline(ss, segment, ':'))
+    {
+        array.push_back(segment);
+    }
     cursor.x = atoi(array.at(0).c_str());
     cursor.y = atoi(array.at(1).c_str());
     int n = array.at(2).length(); 
@@ -66,7 +68,7 @@ int main(int argc, char **argv)
     sub = new ros::Subscriber;
     *sub = sb.subscribe("lcd_print", 10, lcd_print);
     ros::Subscriber sub2 = nh6.subscribe("led_status", 1000, set_led);
-	button1_status = nh1.advertise<std_msgs::Bool>("bt1_status",10);
+    button1_status = nh1.advertise<std_msgs::Bool>("bt1_status",10);
     button2_status = nh2.advertise<std_msgs::Bool>("bt2_status",10);
     button3_status = nh3.advertise<std_msgs::Bool>("bt3_status",10);
     button4_status = nh4.advertise<std_msgs::Bool>("bt4_status",10);
@@ -79,7 +81,7 @@ int main(int argc, char **argv)
     std_msgs::Bool status5;  
     int temp_int;
     settings_nh_.getParam("lcd_adr", temp_int);
-		lcd_adr = (unsigned char) temp_int;
+    lcd_adr = (unsigned char) temp_int;
     i2c_device->m_i2c_bus = 1;
     HAL.initPin(lcd_adr);
     

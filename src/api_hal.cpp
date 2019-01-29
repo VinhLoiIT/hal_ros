@@ -65,7 +65,6 @@ void ApiHAL::print(const char *c)
 {
     lcd->LCDPrintStr(c);
 }
-
 int ApiHAL::gpioGetValue(unsigned int pin, unsigned int *value)
 {
     gpio->gpioGetValue(pin, value);
